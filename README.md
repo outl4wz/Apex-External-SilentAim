@@ -1,6 +1,6 @@
 # Apex-External-SilentAim  
   
-~incomplete~  
+incomplete  
 some weapons do not work well  
   
 [usage]  
