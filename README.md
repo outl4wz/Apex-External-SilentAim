@@ -1,8 +1,6 @@
 # Apex-External-SilentAim  
   
-works on Windows too(maybe)  
-  
-<incomplete>  
+~incomplete~  
 some weapons do not work well  
   
 [usage]  
@@ -15,4 +13,6 @@ https://vimeo.com/814857999
   
 [baseprogram]  
 https://github.com/arturzxc/myapex  
+  
+works on Windows too(maybe)  
   
