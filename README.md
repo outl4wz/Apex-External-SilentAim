@@ -2,7 +2,7 @@
   
 works on Windows too(maybe)  
   
-*incomplete*  
+<incomplete>  
 some weapons do not work well  
   
 [usage]  
