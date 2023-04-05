@@ -14,5 +14,6 @@ https://vimeo.com/814857999
 [baseprogram]  
 https://github.com/arturzxc/myapex  
   
-works on Windows too(maybe)  
   
+The same technique can be used in Windows (maybe)  
+ 
