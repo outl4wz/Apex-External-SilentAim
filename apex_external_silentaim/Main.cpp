@@ -83,7 +83,6 @@ void *silentaim_th_func(void *p) {
 										StopSendPacket();
 										std::this_thread::yield();
 									}
-									int32_t old_current_number = mem::ReadInt(0x14165350C);
 
 									//mem::WriteFloat((long)old_usercmd + 0xC, 0.0f);
 									//mem::WriteFloat((long)old_usercmd + 0xC + 4, 0.0f);
