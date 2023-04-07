@@ -82,7 +82,7 @@ namespace mem
 	short ReadChar(long address)
 	{
 		int size = sizeof(char);
-		short buffer;
+		char buffer;
 		bool success = Read(address, &buffer, size);
 		if (!success)
 			throw new std::invalid_argument("Failed to read char at address: " + address);
