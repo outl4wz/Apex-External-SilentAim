@@ -61,11 +61,14 @@ void *silentaim_th_func(void *p) {
 							long actWeaponID = mem::ReadLong(localplayer_base + offsets::OFFSET_WEAPON) & 0xFFFF;
 							long currentWeapon = mem::ReadLong(offsets::REGION + offsets::ENTITY_LIST + (actWeaponID << 5));
 							if (currentWeapon != 0) {
+								char semiauto_flag = mem::ReadChar(currentWeapon + 0x1C0C);
 								float m_nextReadyTime = mem::ReadFloat(currentWeapon + 0x1648);
-								//float nextPrimaryAttackTime = mem::ReadFloat(currentWeapon + offsets::m_nextPrimaryAttackTime);
+								float nextPrimaryAttackTime = mem::ReadFloat(currentWeapon + offsets::m_nextPrimaryAttackTime);
 								float server_time = mem::ReadFloat(mem::ReadLong(0x141537228) + 36);
 								//if (nextPrimaryAttackTime <= server_time) {
-								if (m_nextReadyTime == 0.0f || m_nextReadyTime <= server_time) {
+								//if (m_nextReadyTime == 0.0f || m_nextReadyTime <= server_time) {
+								if ((semiauto_flag != 0 && nextPrimaryAttackTime <= server_time) ||
+									(m_nextReadyTime == 0.0f || m_nextReadyTime <= server_time)) {
 									uint32_t bak1 = mem::ReadInt(mem::ReadLong(0x14163A850) + 13024);
 									uint32_t bak2 = mem::ReadInt(0x1485FB900);
 									double bak3 = (double)mem::ReadLong(mem::ReadLong(0x14163A850) + 8456);

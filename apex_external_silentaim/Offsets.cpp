@@ -1,5 +1,3 @@
-// Updated: 2023-03-29
- 
 #pragma once
 namespace offsets
 {
