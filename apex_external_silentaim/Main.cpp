@@ -30,7 +30,7 @@ struct CUserCmd {
 
 
 void *silentaim_th_func(void *p) {
-	uint64_t commands_ptr = 0x1420AA920;
+	uint64_t commands_ptr = 0x1420AAA00;
 
 	SilentaimInfo *info = (SilentaimInfo*)p;
 
@@ -43,8 +43,8 @@ void *silentaim_th_func(void *p) {
 
 		bool attack_flag = false;
 		{
-			uint64_t commands_ptr = 0x1420AA920;
-			uint32_t sequence_number = mem::ReadInt(0x14165350C);
+			uint64_t commands_ptr = 0x1420AAA00;
+			uint32_t sequence_number = mem::ReadInt(0x14165353C);
 			CUserCmd* cmd = (CUserCmd*)(mem::ReadLong((uint64_t)commands_ptr + 248) + (552 * ((uint64_t)sequence_number % 750)));
 
 			int bef_buttons = mem::ReadInt((long)cmd + 0x38);
@@ -53,7 +53,7 @@ void *silentaim_th_func(void *p) {
 
 		if (attack_flag == true) {
 			if (*has_lockedOnPlayer_ptr == true) {
-				long tmp_ptr1 = mem::ReadLong(0x14163A850);
+				long tmp_ptr1 = mem::ReadLong(0x14163A880);
 				if (tmp_ptr1 != 0) {
 					if (mem::ReadInt(tmp_ptr1 + 0x2028) < 7) {//choke < 7
 						long localplayer_base = mem::ReadLong(offsets::REGION + offsets::LOCAL_PLAYER);
@@ -69,15 +69,15 @@ void *silentaim_th_func(void *p) {
 								//if (m_nextReadyTime == 0.0f || m_nextReadyTime <= server_time) {
 								if ((semiauto_flag != 0 && nextPrimaryAttackTime <= server_time) ||
 									(m_nextReadyTime == 0.0f || m_nextReadyTime <= server_time)) {
-									uint32_t bak1 = mem::ReadInt(mem::ReadLong(0x14163A850) + 13024);
+									uint32_t bak1 = mem::ReadInt(mem::ReadLong(0x14163A880) + 13024);
 									uint32_t bak2 = mem::ReadInt(0x1485FB900);
-									double bak3 = (double)mem::ReadLong(mem::ReadLong(0x14163A850) + 8456);
-									double bak4 = (double)mem::ReadLong(0x14163A8A0);
-									double bak5 = (double)mem::ReadLong(0x142317770);
+									double bak3 = (double)mem::ReadLong(mem::ReadLong(0x14163A880) + 8456);
+									double bak4 = (double)mem::ReadLong(0x14163A8D0);
+									double bak5 = (double)mem::ReadLong(0x1423177F0);
 
 									StopSendPacket();
 
-									int32_t current_number = mem::ReadInt(0x14165350C);
+									int32_t current_number = mem::ReadInt(0x14165353C);
 									int32_t iDesiredCmdNumber = current_number + 1;
 									CUserCmd* old_usercmd = (CUserCmd*)(mem::ReadLong((uint64_t)commands_ptr + 248) + (552 * (((uint64_t)iDesiredCmdNumber - 1) % 750)));
 									CUserCmd* usercmd = (CUserCmd*)(mem::ReadLong((uint64_t)commands_ptr + 248) + (552 * ((uint64_t)iDesiredCmdNumber % 750)));
@@ -97,11 +97,11 @@ void *silentaim_th_func(void *p) {
 									int bef_buttons = mem::ReadInt((long)old_usercmd + 0x38);
 									mem::WriteInt((long)old_usercmd + 0x38, bef_buttons | 1);
 
-									mem::WriteInt(mem::ReadLong(0x14163A850) + 13024, bak1);
+									mem::WriteInt(mem::ReadLong(0x14163A880) + 13024, bak1);
 									mem::WriteInt(0x1485FB900, bak2);
-									mem::WriteLong(mem::ReadLong(0x14163A850) + 8456, (long)bak3);
-									mem::WriteLong(0x14163A8A0, (long)bak4);
-									mem::WriteLong(0x142317770, (long)bak5);
+									mem::WriteLong(mem::ReadLong(0x14163A880) + 8456, (long)bak3);
+									mem::WriteLong(0x14163A8D0, (long)bak4);
+									mem::WriteLong(0x1423177F0, (long)bak5);
 
 									//printf("silent [time=%f]\n", server_time);
 								}
@@ -163,10 +163,10 @@ int main(int argc, char *argv[]) {
 }
 
 void StopSendPacket() {
-	mem::WriteInt(mem::ReadLong(0x14163A850) + 13024, 0);
+	mem::WriteInt(mem::ReadLong(0x14163A880) + 13024, 0);
 	mem::WriteInt(0x1485FB900, 0);
-	mem::WriteLong(mem::ReadLong(0x14163A850) + 8456, (long)DBL_MAX);
+	mem::WriteLong(mem::ReadLong(0x14163A880) + 8456, (long)DBL_MAX);
 
-	mem::WriteLong(0x14163A8A0, (long)(-DBL_MAX / 2));
-	mem::WriteLong(0x142317770, (long)(DBL_MAX / 2));
+	mem::WriteLong(0x14163A8D0, (long)(-DBL_MAX / 2));
+	mem::WriteLong(0x1423177F0, (long)(DBL_MAX / 2));
 }
