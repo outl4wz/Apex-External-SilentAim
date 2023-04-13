@@ -51,58 +51,56 @@ void *silentaim_th_func(void *p) {
 			attack_flag = ((bef_buttons & 1) != 0);
 		}
 
-		if (attack_flag == true) {
-			if (*has_lockedOnPlayer_ptr == true) {
-				long tmp_ptr1 = mem::ReadLong(0x14163A880);
-				if (tmp_ptr1 != 0) {
-					if (mem::ReadInt(tmp_ptr1 + 0x2028) < 7) {//choke < 7
-						long localplayer_base = mem::ReadLong(offsets::REGION + offsets::LOCAL_PLAYER);
-						if (localplayer_base != 0) {
-							long actWeaponID = mem::ReadLong(localplayer_base + offsets::OFFSET_WEAPON) & 0xFFFF;
-							long currentWeapon = mem::ReadLong(offsets::REGION + offsets::ENTITY_LIST + (actWeaponID << 5));
-							if (currentWeapon != 0) {
-								char semiauto_flag = mem::ReadChar(currentWeapon + 0x1C0C);
+				if (attack_flag == true) {
+					if (*has_lockedOnPlayer_ptr == true) {
+						long tmp_ptr1 = mem::ReadLong(offsets::tmp_ptr1);
+						if (tmp_ptr1 != 0) {
+							if (mem::ReadInt(tmp_ptr1 + 0x2028) < 7) {//choke < 7
+							long localplayer_base = mem::ReadLong(offsets::REGION + offsets::LOCAL_PLAYER);
+								if (localplayer_base != 0) {
+								long actWeaponID = mem::ReadLong(localplayer_base + offsets::OFFSET_WEAPON) & 0xFFFF;
+								long currentWeapon = mem::ReadLong(offsets::REGION + offsets::ENTITY_LIST + (actWeaponID << 5));
+								if (currentWeapon != 0) {
 								float m_nextReadyTime = mem::ReadFloat(currentWeapon + 0x1648);
-								float nextPrimaryAttackTime = mem::ReadFloat(currentWeapon + offsets::m_nextPrimaryAttackTime);
-								float server_time = mem::ReadFloat(mem::ReadLong(0x141537228) + 36);
+								//float nextPrimaryAttackTime = mem::ReadFloat(currentWeapon + offsets::m_nextPrimaryAttackTime);
+								float server_time = mem::ReadFloat(mem::ReadLong(offsets::server_time) + 36);
 								//if (nextPrimaryAttackTime <= server_time) {
-								//if (m_nextReadyTime == 0.0f || m_nextReadyTime <= server_time) {
-								if ((semiauto_flag != 0 && nextPrimaryAttackTime <= server_time) ||
-									(m_nextReadyTime == 0.0f || m_nextReadyTime <= server_time)) {
-									uint32_t bak1 = mem::ReadInt(mem::ReadLong(0x14163A880) + 13024);
-									uint32_t bak2 = mem::ReadInt(0x1485FB900);
-									double bak3 = (double)mem::ReadLong(mem::ReadLong(0x14163A880) + 8456);
-									double bak4 = (double)mem::ReadLong(0x14163A8D0);
-									double bak5 = (double)mem::ReadLong(0x1423177F0);
-
+								if (m_nextReadyTime == 0.0f || m_nextReadyTime <= server_time) {
+									uint32_t bak1 = mem::ReadInt(mem::ReadLong(offsets::tmp_ptr1) + 13024);
+									uint32_t bak2 = mem::ReadInt(offsets::bak2);
+									double bak3 = (double)mem::ReadLong(mem::ReadLong(offsets::tmp_ptr1) + 8456);
+									double bak4 = (double)mem::ReadLong(offsets::bak4);
+									double bak5 = (double)mem::ReadLong(offsets::bak5);
+ 
 									StopSendPacket();
-
-									int32_t current_number = mem::ReadInt(0x14165353C);
+ 
+									int32_t current_number = mem::ReadInt(offsets::sequence_number);
 									int32_t iDesiredCmdNumber = current_number + 1;
 									CUserCmd* old_usercmd = (CUserCmd*)(mem::ReadLong((uint64_t)commands_ptr + 248) + (552 * (((uint64_t)iDesiredCmdNumber - 1) % 750)));
 									CUserCmd* usercmd = (CUserCmd*)(mem::ReadLong((uint64_t)commands_ptr + 248) + (552 * ((uint64_t)iDesiredCmdNumber % 750)));
-
+ 
 									while (mem::ReadInt((long)usercmd) < iDesiredCmdNumber) {
 										StopSendPacket();
 										std::this_thread::yield();
 									}
-
+									int32_t old_current_number = mem::ReadInt(offsets::sequence_number);
+ 
 									//mem::WriteFloat((long)old_usercmd + 0xC, 0.0f);
 									//mem::WriteFloat((long)old_usercmd + 0xC + 4, 0.0f);
 									mem::WriteFloat((long)old_usercmd + 0xC, *silent_aim_x_ptr);
 									mem::WriteFloat((long)old_usercmd + 0xC + 4, *silent_aim_y_ptr);
-
+ 
 									//printf("silent x = %f, y = %f\n", *silent_aim_x_ptr, *silent_aim_y_ptr);
-
+ 
 									int bef_buttons = mem::ReadInt((long)old_usercmd + 0x38);
 									mem::WriteInt((long)old_usercmd + 0x38, bef_buttons | 1);
-
-									mem::WriteInt(mem::ReadLong(0x14163A880) + 13024, bak1);
-									mem::WriteInt(0x1485FB900, bak2);
-									mem::WriteLong(mem::ReadLong(0x14163A880) + 8456, (long)bak3);
-									mem::WriteLong(0x14163A8D0, (long)bak4);
-									mem::WriteLong(0x1423177F0, (long)bak5);
-
+ 
+									mem::WriteInt(mem::ReadLong(offsets::tmp_ptr1) + 13024, bak1);
+									mem::WriteInt(offsets::bak2, bak2);
+									mem::WriteLong(mem::ReadLong(offsets::tmp_ptr1) + 8456, (long)bak3);
+									mem::WriteLong(offsets::bak4, (long)bak4);
+									mem::WriteLong(offsets::bak5, (long)bak5);
+ 
 									//printf("silent [time=%f]\n", server_time);
 								}
 							}
@@ -111,6 +109,7 @@ void *silentaim_th_func(void *p) {
 				}
 			}
 		}
+				
 	}
 }
 
@@ -163,10 +162,10 @@ int main(int argc, char *argv[]) {
 }
 
 void StopSendPacket() {
-	mem::WriteInt(mem::ReadLong(0x14163A880) + 13024, 0);
-	mem::WriteInt(0x1485FB900, 0);
-	mem::WriteLong(mem::ReadLong(0x14163A880) + 8456, (long)DBL_MAX);
-
-	mem::WriteLong(0x14163A8D0, (long)(-DBL_MAX / 2));
-	mem::WriteLong(0x1423177F0, (long)(DBL_MAX / 2));
+	mem::WriteInt(mem::ReadLong(offsets::tmp_ptr1) + 13024, 0);
+	mem::WriteInt(offsets::bak2, 0);
+	mem::WriteLong(mem::ReadLong(offsets::tmp_ptr1) + 8456, (long)DBL_MAX);
+ 
+	mem::WriteLong(offsets::bak4, (long)(-DBL_MAX / 2));
+	mem::WriteLong(offsets::bak5, (long)(DBL_MAX / 2));
 }

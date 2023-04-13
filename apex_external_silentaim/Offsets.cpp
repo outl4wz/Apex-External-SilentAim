@@ -40,4 +40,13 @@ namespace offsets
 	const long OFFSET_BREATH_ANGLES = (VIEW_ANGLE - 0x10);
 
 	const long OFFSET_BONES = (0x0e98 + 0x48); //m_nForceBone + 0x48
+	
+	//silentaim 
+	const long commands_ptr = 0x1420AAA00;
+	const long sequence_number = 0x14165353C;
+	const long tmp_ptr1 = 0x14163A880;
+	const long server_time =0x141537228;
+	const long bak2 = 0x1485FB980;
+	const long bak4 = 0x14163A8D0;
+	const long bak5 = 0x1423177F0;
 }
