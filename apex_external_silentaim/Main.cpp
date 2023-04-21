@@ -30,7 +30,7 @@ struct CUserCmd {
 
 
 void *silentaim_th_func(void *p) {
-	uint64_t commands_ptr = 0x1420AAA00;
+	uint64_t commands_ptr = 0x1420a9960;
 
 	SilentaimInfo *info = (SilentaimInfo*)p;
 
@@ -43,8 +43,8 @@ void *silentaim_th_func(void *p) {
 
 		bool attack_flag = false;
 		{
-			uint64_t commands_ptr = 0x1420AAA00;
-			uint32_t sequence_number = mem::ReadInt(0x14165353C);
+			uint64_t commands_ptr = 0x1420a9960;
+			uint32_t sequence_number = mem::ReadInt(0x1416524BC);
 			CUserCmd* cmd = (CUserCmd*)(mem::ReadLong((uint64_t)commands_ptr + 248) + (552 * ((uint64_t)sequence_number % 750)));
 
 			int bef_buttons = mem::ReadInt((long)cmd + 0x38);
