@@ -10,6 +10,8 @@
 #include "Aimbot.cpp"
 #include "Memory.cpp"
 #include "Offsets.cpp"
+#include "Sense.cpp"
+
 
 void StopSendPacket();
 
@@ -139,7 +141,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	Aimbot *aimbot = new Aimbot(&level, &localPlayer, players, &has_lockedOnPlayer, &silent_aim_x, &silent_aim_y);
-
+	int counter = 0;
+	Sense *sense = new Sense(&level, &localPlayer, players);
 	printf("START MAIN LOOP!\n");
 
 	for (;;) {
@@ -149,7 +152,7 @@ int main(int argc, char *argv[]) {
 				Player *player = players->at(i);
 				player->markForPointerResolution();
 			}
-
+			sense->update(counter);
 			aimbot->update();
 		}
 		catch (...) {
