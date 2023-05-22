@@ -10,6 +10,7 @@
 #include "Aimbot.cpp"
 #include "Memory.cpp"
 #include "Offsets.cpp"
+#include "Sense.cpp"
 
 void StopSendPacket();
 
@@ -30,7 +31,7 @@ struct CUserCmd {
 
 
 void *silentaim_th_func(void *p) {
-	uint64_t commands_ptr = 0x1420a9960;
+	uint64_t commands_ptr = 0x142121990;
 
 	SilentaimInfo *info = (SilentaimInfo*)p;
 
@@ -43,8 +44,8 @@ void *silentaim_th_func(void *p) {
 
 		bool attack_flag = false;
 		{
-			uint64_t commands_ptr = 0x1420a9960;
-			uint32_t sequence_number = mem::ReadInt(0x1416524BC);
+			uint64_t commands_ptr = 0x142121990;
+			uint32_t sequence_number = mem::ReadInt(0x14167488C);
 			CUserCmd* cmd = (CUserCmd*)(mem::ReadLong((uint64_t)commands_ptr + 248) + (552 * ((uint64_t)sequence_number % 750)));
 
 			int bef_buttons = mem::ReadInt((long)cmd + 0x38);
@@ -56,6 +57,7 @@ void *silentaim_th_func(void *p) {
 						long tmp_ptr1 = mem::ReadLong(offsets::tmp_ptr1);
 						if (tmp_ptr1 != 0) {
 							if (mem::ReadInt(tmp_ptr1 + 0x2028) < 7) {//choke < 7
+							//printf("1");
 							long localplayer_base = mem::ReadLong(offsets::REGION + offsets::LOCAL_PLAYER);
 								if (localplayer_base != 0) {
 								long actWeaponID = mem::ReadLong(localplayer_base + offsets::OFFSET_WEAPON) & 0xFFFF;
@@ -139,7 +141,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	Aimbot *aimbot = new Aimbot(&level, &localPlayer, players, &has_lockedOnPlayer, &silent_aim_x, &silent_aim_y);
-
+	int counter = 0;
+	Sense *sense = new Sense(&level, &localPlayer, players);
 	printf("START MAIN LOOP!\n");
 
 	for (;;) {
@@ -149,7 +152,7 @@ int main(int argc, char *argv[]) {
 				Player *player = players->at(i);
 				player->markForPointerResolution();
 			}
-
+			sense->update(counter);
 			aimbot->update();
 		}
 		catch (...) {
